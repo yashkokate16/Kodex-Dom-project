@@ -78,7 +78,7 @@ function left() {
     index--;
     
     if(index < 0) {
-       index = images.length-1;
+       index = images.length-1;j
     }
      
     slide.src = images[index]
@@ -98,8 +98,8 @@ function scroll() {
         btn.innerText = "stop "
        
         int = setInterval(() => {
-       index++
-
+          index++
+ 
       if(index >= images.length) {
         index = 0
       }
@@ -125,6 +125,8 @@ function download() {
     link.href = slide.src;
     link.download = "image.jpeg"
     link.click();
+
+    
     clearInterval(int)
     btn.innerText = "slide-show";
         click = false
@@ -135,6 +137,104 @@ function download() {
 }
 download()
 
+let songs = [
+"songs/1.mp3",
+"songs/3.mp3",
+"songs/4.mp3",
+"songs/5.mp3",
+"songs/6.mp3",
+"songs/7.mp3",
+"songs/8.mp3",
+"songs/9.mp3",
+"songs/10.mp3",
+"songs/11.mp3",
+"songs/12.mp3",
+"songs/13.mp3",
+"songs/14.mp3",
+"songs/15.mp3",
+"songs/16.mp3",
+"songs/17.mp3",
+"songs/18.mp3",
+]
+
+
+let audio = new Audio();
+let currentIndex = 0
+
+audio.src = songs[currentIndex];
+
+
+let nextBtn = document.querySelector(".next")
+let prevBtn = document.querySelector(".prev")
+let playSongBtn = document.querySelector(".play")
+let progressBar = document.getElementById("progress-bar");
+
+// play pause code //
+
+playSongBtn.addEventListener("click",() => {
+    if(audio.paused){
+      audio.play();
+       playSongBtn.classList.remove("ri-play-large-line")
+       playSongBtn.classList.add("ri-pause-large-line")
+      
+    } else{
+      audio.pause();
+      playSongBtn.classList.remove("ri-pause-large-line")
+      playSongBtn.classList.add("ri-play-large-line")
+    }
+})
+
+// progress bar code //
+
+audio.addEventListener("timeupdate" ,() => {
+    let progress = (audio.currentTime/audio.duration) * 100
+    progressBar.value = progress;
+     
+})
+progressBar.addEventListener("input", function() {
+    let value = this.value;
+    audio.currentTime = (progressBar.value * audio.duration) / 100;
+})
+
+
+function playSong(index) {
+    audio.src = songs[index];
+    audio.currentTime = 0;
+    audio.play();
+}
+
+// next btn //
+
+nextBtn.addEventListener("click",() =>{
+  currentIndex ++
+
+  if(currentIndex >=songs.length){
+    currentIndex = 0;
+  }
+
+  playSong(currentIndex)
+})
+//  prev btn //
+
+prevBtn.addEventListener("click", () => {
+    currentIndex--;
+
+    if(currentIndex < 0){
+        currentIndex = songs.length - 1;
+    }
+    
+    playSong(currentIndex);
+});
+
+//  auto next //
+
+audio.addEventListener("ended", () => {
+    currentIndex++;
+    if(currentIndex >= songs.length){
+        currentIndex = 0;
+    }
+    playSong(currentIndex);
+});
 
 
 
